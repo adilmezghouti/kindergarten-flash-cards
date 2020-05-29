@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrophone, faPlay, faAngleRight, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faMicrophone, faPlay, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import cx from 'classnames'
 
 const words = ['This', 'That', 'They', 'There']
 
@@ -23,18 +24,46 @@ const readWord = async word => {
   window.speechSynthesis.speak(utterance);
 }
 
+const listenToWord = (setWord, setSpeaking) => {
+  setSpeaking(true)
+  const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
+  const recognition = new SpeechRecognition()
+  recognition.lang = 'en-US'
+  recognition.interimResults = false
+  recognition.start()
+
+  recognition.onresult = event => {
+    const speechToText = event.results[0][0].transcript
+    setWord(speechToText)
+    setSpeaking(false)
+  }
+}
 const SightWords = (props) => {
   const [count, setCount] = useState(0)
+  const [word, setWord] = useState('')
+  const [speaking, setSpeaking] = useState(false)
 
   return (<div className="grid">
       <div className="card">
         <p>{words[count]}</p>
+        <p>{word}</p>
         <div className="actions">
           <div className="hexagon-wrapper">
-            <button className="hexagon">
+            <button className="hexagon" onClick={() => count > 0 && setCount(count - 1)}>
+              <FontAwesomeIcon
+                icon={faArrowLeft}
+                size="3x"
+              />
+            </button>
+          </div>
+          <div className={cx('hexagon-wrapper',speaking && 'microphone')}>
+            <button className="hexagon" onClick={async () => {
+              await listenToWord(setWord, setSpeaking)
+            }}>
               <FontAwesomeIcon
                 icon={faMicrophone}
                 size="3x"
+                color={speaking ? 'red' : '#69f9e1'}
               />
             </button>
           </div>
@@ -64,12 +93,6 @@ const SightWords = (props) => {
           align-items: center;
           justify-content: center;
           flex-wrap: wrap;
-
-          // max-width: 800px;
-          // max-height: 1288px;
-          // margin-top: 3rem;
-          // margin: auto;
-                    
           background-color: #69f9e1;
         }
         
@@ -101,8 +124,27 @@ const SightWords = (props) => {
           line-height: 1.5;
         }
         
-        .card button:hover {
+        button {
+          border: none;
+          background: none;
+          position: relative;
+          width: 46%;
+          height: 80%;
+          margin: auto;
+          color: #69f9e1;
+          display: flex;
+          align-content: center;
+          justify-content: center;
+          transition: 0.5s;
+        }
+         
+        button:active, button:hover {
           color: #0070f3;
+        }
+
+        button:focus {
+          color: #0070f3;
+          outline:0;
         }
 
         .logo {
@@ -110,8 +152,8 @@ const SightWords = (props) => {
         }
         
         .actions {
+          height: 100px;
           overflow: hidden;
-          // background: linear-gradient(18deg, #e37682, #a58fe9);
           display: flex;
           flex-wrap: wrap;
           justify-content: space-evenly;
@@ -127,59 +169,22 @@ const SightWords = (props) => {
           cursor: pointer;
         }
         
-        .hexagon {
-          position: relative;
-          width: 46%;
-          height: 80%;
-          margin: auto;
-          color: #69f9e1;
-          // background: linear-gradient(-180deg, white, #fda3b2);
-          display: flex;
-          align-content: center;
-          justify-content: center;
-          transition: 0.5s;
+        @keyframes shadow-pulse
+          {
+             0% {
+              box-shadow: 0 0 0 0px rgba(105, 249, 225, 0.2);
+             }
+             100% {
+              box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
+             }
+          }
+        
+        .microphone {
+          background: rgba(105, 249, 225, 0.6);
+          border-radius: 50%;
+          animation: shadow-pulse 1s infinite;
         }
         
-        // .icon {
-        //   z-index: 1;
-        //   margin: auto;
-        //   font-size: 50px;
-        //   color: transparent;
-        //   background: linear-gradient(45deg, #a58fe9, #e37682);
-        //   background-clip: text;
-        //   -webkit-background-clip: text;
-        // }
-        
-        // .hexagon:before,
-        // .hexagon:after {
-        //   position: absolute;
-        //   content: "";
-        //   background: inherit;
-        //   height: 100%;
-        //   width: 100%;
-        //   border-radius: 0;
-        //   transition: 0.5s;
-        //   transform-origin: center;
-        // }
-        // .hexagon:before {
-        //   transform: rotateZ(60deg);
-        // }
-        // .hexagon:after {
-        //   transform: rotateZ(-60deg);
-        // }
-        // .hexagon:hover {
-        //   border-radius: 50px;
-        //   transition: 0.5s;
-        // }
-        // .hexagon:hover:before {
-        //   border-radius: 50px;
-        //   transition: 0.5s;
-        // }
-        // .hexagon:hover:after {
-        //   border-radius: 50px;
-        //   transition: 0.5s;
-        // }
-
         @media (max-width: 600px) {
           .grid {
             width: 100%;
