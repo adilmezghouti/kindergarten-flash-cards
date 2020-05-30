@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrophone, faPlay, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faMicrophone, faPlay, faArrowLeft, faArrowRight, faShieldAlt } from '@fortawesome/free-solid-svg-icons'
 import cx from 'classnames'
 
-const words = ['This', 'That', 'They', 'There']
+const levels = {
+  bronze: ['I', 'a', 'The', 'go', 'up', 'to', 'see', 'and', 'is', 'in', 'can', 'you', 'he', 'it', 'she', 'look', 'my', 'like', 'on', 'will'],
+  silver: ['for', 'was', 'That', 'are', 'with', 'of', 'no', 'me', 'or', 'make', 'we', 'his', 'her', 'by', 'said', 'am', 'day', 'have', 'who', 'many'],
+  gold: ['be', 'new', 'could', 'use', 'walk', 'do', 'way', 'again', 'goes', 'say', 'about', 'little', 'come', 'more', 'want', 'your', 'some', 'from', 'they', 'each']
+}
 
 const getVoices = () => {
   const speechSynthesis = window.speechSynthesis
@@ -38,18 +42,63 @@ const listenToWord = (setWord, setSpeaking) => {
     setSpeaking(false)
   }
 }
+
 const SightWords = (props) => {
+  const [level, setLevel] = useState('bronze')
   const [count, setCount] = useState(0)
   const [word, setWord] = useState('')
   const [speaking, setSpeaking] = useState(false)
+  const words = levels[level]
+
+  useEffect(() => {
+    setCount(0)
+  }, [level])
 
   return (<div className="grid">
-      <div className="card">
+      <div className={cx("card", level)}>
+        <div className="actions">
+          <div className="hexagon-wrapper">
+            <button className="hexagon bronze" onClick={ async () => {
+              setLevel('bronze')
+              await readWord('level one')
+            }}>
+              <FontAwesomeIcon
+                icon={faShieldAlt}
+                size="3x"
+              />
+            </button>
+          </div>
+          <div className={cx('hexagon-wrapper',speaking && 'microphone')}>
+            <button className="hexagon silver" onClick={ async () => {
+              setLevel('silver')
+              await readWord('level two')
+            }}>
+              <FontAwesomeIcon
+                icon={faShieldAlt}
+                size="3x"
+              />
+            </button>
+          </div>
+          <div className="hexagon-wrapper">
+            <button className="hexagon gold" onClick={ async () => {
+              setLevel('gold')
+              await readWord('level three')
+            }}>
+              <FontAwesomeIcon
+                icon={faShieldAlt}
+                size="3x"
+              />
+            </button>
+          </div>
+        </div>
         <p>{words[count]}</p>
         <p>{word}</p>
         <div className="actions">
           <div className="hexagon-wrapper">
-            <button className="hexagon" onClick={() => count > 0 && setCount(count - 1)}>
+            <button className="hexagon" onClick={() => {
+              count > 0 && setCount(count - 1)
+              setWord('')
+            }}>
               <FontAwesomeIcon
                 icon={faArrowLeft}
                 size="3x"
@@ -76,7 +125,10 @@ const SightWords = (props) => {
             </button>
           </div>
           <div className="hexagon-wrapper">
-            <button className="hexagon" onClick={() => count < words.length - 1 && setCount(count + 1)}>
+            <button className="hexagon" onClick={() => {
+              count < words.length - 1 && setCount(count + 1)
+              setWord('')
+            }}>
               <FontAwesomeIcon
                 icon={faArrowRight}
                 size="3x"
@@ -111,7 +163,19 @@ const SightWords = (props) => {
           box-shadow: 3px 5px #888888;
           transition: color 0.15s ease, border-color 0.15s ease;
         }
-
+        
+        .card.bronze {
+          border: 3px solid #cd7f32;
+        }
+        
+        .card.silver {
+          border: 3px solid #c0c0c0;
+        }
+        
+        .card.gold {
+          border: 3px solid #ffd700;
+        }
+        
         .card h3 {
           margin: 0 0 1rem 0;
           font-size: 1.5rem;
@@ -167,6 +231,16 @@ const SightWords = (props) => {
           width: 60px;
           height: 60px;
           cursor: pointer;
+        }
+        
+        button.bronze {
+          color: #cd7f32;
+        }
+        button.silver {
+          color: #c0c0c0;
+        }
+        button.gold {
+          color: #ffd700;
         }
         
         @keyframes shadow-pulse
