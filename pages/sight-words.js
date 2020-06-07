@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrophone, faPlay, faArrowLeft, faArrowRight, faShieldAlt } from '@fortawesome/free-solid-svg-icons'
 import cx from 'classnames'
+import Head from "next/head";
 
 const levels = {
   bronze: ['I', 'a', 'The', 'go', 'up', 'to', 'see', 'and', 'is', 'in', 'can', 'you', 'he', 'it', 'she', 'look', 'my', 'like', 'on', 'will'],
@@ -54,165 +53,121 @@ const SightWords = (props) => {
     setCount(0)
   }, [level])
 
-  return (<div className="grid">
-      <div className={cx("card", level)}>
-        <div className="actions">
-          <div className="hexagon-wrapper">
-            <button className="hexagon bronze" onClick={ async () => {
-              setLevel('bronze')
-              await readWord('level one')
-            }}>
-              <FontAwesomeIcon
-                icon={faShieldAlt}
-                size="3x"
-              />
-            </button>
-          </div>
-          <div className={cx('hexagon-wrapper',speaking && 'microphone')}>
-            <button className="hexagon silver" onClick={ async () => {
-              setLevel('silver')
-              await readWord('level two')
-            }}>
-              <FontAwesomeIcon
-                icon={faShieldAlt}
-                size="3x"
-              />
-            </button>
-          </div>
-          <div className="hexagon-wrapper">
-            <button className="hexagon gold" onClick={ async () => {
-              setLevel('gold')
-              await readWord('level three')
-            }}>
-              <FontAwesomeIcon
-                icon={faShieldAlt}
-                size="3x"
-              />
-            </button>
-          </div>
-        </div>
-        <p>{words[count]}</p>
-        <p>{word}</p>
-        <div className="actions">
-          <div className="hexagon-wrapper">
-            <button className="hexagon" onClick={() => {
-              count > 0 && setCount(count - 1)
-              setWord('')
-            }}>
-              <FontAwesomeIcon
-                icon={faArrowLeft}
-                size="3x"
-              />
-            </button>
-          </div>
-          <div className={cx('hexagon-wrapper',speaking && 'microphone')}>
-            <button className="hexagon" onClick={async () => {
-              await listenToWord(setWord, setSpeaking)
-            }}>
-              <FontAwesomeIcon
-                icon={faMicrophone}
-                size="3x"
-                color={speaking ? 'red' : '#69f9e1'}
-              />
-            </button>
-          </div>
-          <div className="hexagon-wrapper">
-            <button className="hexagon" onClick={async () => await readWord(words[count])}>
-              <FontAwesomeIcon
-                icon={faPlay}
-                size="3x"
-              />
-            </button>
-          </div>
-          <div className="hexagon-wrapper">
-            <button className="hexagon" onClick={() => {
-              count < words.length - 1 && setCount(count + 1)
-              setWord('')
-            }}>
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                size="3x"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
+  return (
+    <div className="container">
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
+      <main className="main">
+        <div className={cx("card", level)}>
+          <div className="actions">
+            <div className="hexagon-wrapper">
+              <button className="hexagon bronze" onClick={ async () => {
+                setLevel('bronze')
+                await readWord('level one')
+              }}>
+                Bronze
+              </button>
+            </div>
+            <div className={cx('hexagon-wrapper',speaking && 'microphone')}>
+              <button className="hexagon silver" onClick={ async () => {
+                setLevel('silver')
+                await readWord('level two')
+              }}>
+                Silver
+              </button>
+            </div>
+            <div className="hexagon-wrapper">
+              <button className="hexagon gold" onClick={ async () => {
+                setLevel('gold')
+                await readWord('level three')
+              }}>
+                Gold
+              </button>
+            </div>
+          </div>
+          <p>{words[count]}</p>
+          <p>{word}</p>
+          <div className="actions">
+            <div className="hexagon-wrapper">
+              <button className="hexagon back" onClick={() => {
+                count > 0 && setCount(count - 1)
+                setWord('')
+              }}>
+              </button>
+            </div>
+            <div className={cx('hexagon-wrapper',speaking && 'microphone')}>
+              <button className="hexagon micro" onClick={async () => {
+                await listenToWord(setWord, setSpeaking)
+              }}>
+              </button>
+            </div>
+            <div className="hexagon-wrapper">
+              <button className="hexagon play" onClick={async () => await readWord(words[count])}>
+              </button>
+            </div>
+            <div className="hexagon-wrapper">
+              <button className="hexagon next" onClick={() => {
+                count < words.length - 1 && setCount(count + 1)
+                setWord('')
+              }}>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
 
       <style jsx>{`
-        .grid {
+        .container {
+          border: 1px solid #eaeaea;
+          border-radius: 10px;
+          min-height: 100vh;
+          padding: 0 0.5rem;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-          background-color: #69f9e1;
-        }
-        
-        .card {
-          background-color: #ffffff;
-          display: flex;
-          // flex-basis: 45%;
           flex-direction: column;
-          width: 380px;
-          height: 570px;
+          justify-content: center;
+          align-items: center;
+        }
+      
+        .main {
+          border: 1px solid #000000;
+          border-radius: 10px;
+          background-repeat: no-repeat;
+          max-width: 500px;
+          max-height: 800px;
+          width: 500px;
+          height: 800px;
+          margin: auto;
+          background-image: url('/background.png');
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          flex: 1;
+          display: flex;
+        }
+  
+        .card {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          color: #fcbf29;
           margin: 1rem;
           padding: 1.5rem;
-          color: #fcbf29;
-          border: 1px solid #0070f3;
-          border-radius: 17px;
-          box-shadow: 3px 5px #888888;
           transition: color 0.15s ease, border-color 0.15s ease;
-        }
-        
-        .card.bronze {
-          border: 3px solid #cd7f32;
-        }
-        
-        .card.silver {
-          border: 3px solid #c0c0c0;
-        }
-        
-        .card.gold {
-          border: 3px solid #ffd700;
         }
         
         .card h3 {
           margin: 0 0 1rem 0;
           font-size: 1.5rem;
         }
-
-        .card p {
+  
+        .card p {          
           margin: auto;
           text-align: center;
           font-size: 7.25rem;
           line-height: 1.5;
-        }
-        
-        button {
-          border: none;
-          background: none;
-          position: relative;
-          width: 46%;
-          height: 80%;
-          margin: auto;
-          color: #69f9e1;
-          display: flex;
-          align-content: center;
-          justify-content: center;
-          transition: 0.5s;
-        }
-         
-        button:active, button:hover {
-          color: #0070f3;
-        }
-
-        button:focus {
-          color: #0070f3;
-          outline:0;
-        }
-
-        .logo {
-          height: 1em;
         }
         
         .actions {
@@ -222,8 +177,61 @@ const SightWords = (props) => {
           flex-wrap: wrap;
           justify-content: space-evenly;
           align-items: center;
-         }
+        }
+       
+        button {
+          border: none;
+          background: none;
+          position: relative;
+          width: 100%;
+          height: 100%;
+          margin: auto;
+          color: #69f9e1;
+          display: flex;
+          align-content: center;
+          justify-content: center;
+          transition: 0.5s;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        
+        .next {
+          background-image: url('/next-inactive.png');
+        }
          
+       .back {
+          background-image: url('/back-inactive.png');
+        }
+       .play {
+          background-image: url('/play-inactive.png');
+        }
+       .micro {
+          background-image: url('/microphone-inactive.png');
+        }
+
+      .next:hover {
+          background-image: url('/next-active.png');
+        }
+         
+       .back:hover {
+          background-image: url('/back-active.png');
+        }
+       .play:hover {
+          background-image: url('/play-active.png');
+        }
+       .micro:hover {
+          background-image: url('/microphone-active.png');
+        }
+
+        button:focus {
+          outline:0;
+        }
+  
+        .logo {
+          height: 1em;
+        }
+        
         .hexagon-wrapper {
           margin: auto;
           display: flex;
@@ -246,7 +254,7 @@ const SightWords = (props) => {
         @keyframes shadow-pulse
           {
              0% {
-              box-shadow: 0 0 0 0px rgba(105, 249, 225, 0.2);
+              box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
              }
              100% {
               box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
@@ -254,7 +262,7 @@ const SightWords = (props) => {
           }
         
         .microphone {
-          background: rgba(105, 249, 225, 0.6);
+          background: rgba(0, 0, 0  , 0.6);
           border-radius: 50%;
           animation: shadow-pulse 1s infinite;
         }
@@ -265,7 +273,8 @@ const SightWords = (props) => {
             flex-direction: column;
           }
         }
-      `}</style>
+      `}
+      </style>
     </div>
   )
 }
