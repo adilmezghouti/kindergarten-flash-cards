@@ -56,7 +56,7 @@ const SightWords = (props) => {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Sight Words</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -88,7 +88,7 @@ const SightWords = (props) => {
               </button>
             </div>
           </div>
-          <p>{words[count]}</p>
+          <div className="word-holder">{words[count]}</div>
           <p>{word}</p>
           <div className="actions">
             <div className="hexagon-wrapper">
@@ -163,13 +163,30 @@ const SightWords = (props) => {
           font-size: 1.5rem;
         }
   
-        .card p {          
+        .card p {
           margin: auto;
           text-align: center;
           font-size: 7.25rem;
           line-height: 1.5;
+          background-image: url('/word-holder.png');
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
         }
         
+        .card .word-holder {
+            color: #f4f0e9;
+            font-weight: 600;
+            text-align: center;
+            font-size: 5.25rem;
+            line-height: 150px;
+            height: 170px;
+            background-image: url('/word-holder.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
         .actions {
           height: 100px;
           overflow: hidden;
